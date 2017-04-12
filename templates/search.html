@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h2>Wyszukaj gminę</h2>
+{%  endblock %}
+
+{% block nav %}
+  Wróć do: <a href="/">Polska</a>
+{% endblock %}
+
+
+{% block content %}
+  <form method="GET" action=".">
+  <input type="text" name="q" value="{% if query %}{{ query }}{% endif %}">
+  <input type="submit" class="btn" value="Wyszukaj" >
+</form>
+
+{% if result %}
+<section>
+  <h2>Wyniki głosowania w poszczególnych gminach</h2>
+  <div id="voting_sub">
+  <table class="voting_tab">
+    <thead>
+      <tr>
+        <th>Kod gminy</th>
+        <th>Nazwa gminy</th>
+      </tr>
+        </thead>
+        <tbody>
+        {% for row in result %}<tr>
+            <td><a href="{{row.get_absolute_url}}">{{row.id}}</a></td>
+            <td><a href="{{row.get_absolute_url}}">{{row.name}}</a></td>
+        </tr>{% endfor %}
+      </tbody>
+	</table>
+
+
+{% if result.has_other_pages %}
+<div>
+    {% if result.has_previous %}
+        <a href="?q={{ query }}&p={{result.previous_page_number}}">&lt;</a>
+    {% endif %}
+
+    {% for pg in page_range %}
+        {% if result.number == pg %}
+          <span>{{pg}}</span>
+        {% else %}
+          <a href="?q={{query}}&p={{pg}}">{{pg}}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if result.has_next %}
+        <a href="?q={{ query }}&p={{result.next_page_number}}">&gt;</a>
+    {% endif %}
+</div>
+{% endif %}
+  
+  </div>
+</section>
+
+{% endif %}
+
+{%  endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block header %}
+  <h1>Zestawienie wyników - województwo {{area.name}}</h1>
+{% endblock %}
+
+{% block nav %}
+  Wróć do: <a href="\">Polska</a>
+{% endblock %}
+
+{% block content %}
+<section>
+    {% include "stats.html" %}
+</section>
+    {% include "candidates.html" %}
+<section>
+  <h2>Wyniki głosowania w poszczególnych okręgach</h2>
+  <div id="voting_sub">
+  <table class="voting_tab">
+    <thead>
+      <tr>
+        <th>Numer okręgu</th>
+        <th>Nazwa okręgu</th>
+        <th>Liczba uprawnionych</th>
+        <th>Liczba kart wydanych</th>
+        <th>Liczba oddanych głosów</th>
+        <th>Głosy ważne</th>
+        <th>Głosy nieważne</th>
+        <th>Frekwencja (%)</th>
+      </tr>
+        </thead>
+        <tbody>
+        {% for row in area.subareas.all %}<tr>
+            <td><a href="{{row.get_absolute_url}}">{{row.id}}</a></td>
+            <td><a href="{{row.get_absolute_url}}">{{row.name}}</a></td>
+		    <td>{{row.entitled}}</td>
+		    <td>{{row.cards}}</td>
+		    <td>{{row.votes}}</td>
+		    <td>{{row.valid}}</td>
+		    <td>{{row.invalid}}</td>
+            <td>{{row.attendance}}</td>
+        </tr>{% endfor %}
+      </tbody>
+	</table>
+  </div>
+</section>
+{% endblock %}

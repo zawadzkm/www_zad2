@@ -1,0 +1,51 @@
+{% load extras %}
+<section>
+  <h2>Wyniki głosowania na poszczególnych kandydatów</h2>
+  <div id="voting_cand">
+    <div id="candidate_tab">
+      <table class="voting_tab">
+        <thead>
+          <tr>
+            <th>Imię i nazwisko</th>
+            <th>Liczba oddanych głosów</th>
+            <th>Wynik wyborczy (%)</th>
+          </tr>
+            </thead>
+            <tbody>
+            {% for c in area.candidates|dictsortreversed:"votes" %}<tr>
+                <td>{{c.name}}</td>
+                <td>{{c.votes}}</td>
+                <td>{{c.votes|result:area.votes}}</td>
+            </tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    <script type="text/javascript">
+          google.charts.load('current', {'packages':['corechart']});
+          google.charts.setOnLoadCallback(drawChart);
+
+          function drawChart() {
+
+            var data = google.visualization.arrayToDataTable([
+              ['Kandydat', 'Wynik'],
+              {% for c in area.candidates|dictsortreversed:"votes" %}
+                ['{{c.name}}',     {{c.votes|result:area.votes}}],
+              {% endfor %}
+                          ]);
+            var options = {
+              'legend':'right',
+              chartArea:{left:0,top:0,width:"100%",height:"100%"}
+            }
+            var chart = new google.visualization.PieChart(document.getElementById('candidate_chart'));
+
+            chart.draw(data, options);
+          }
+          $(window).resize(function(){
+	  	    drawChart();
+    	  });
+        </script>
+
+    <div id="candidate_chart"></div>
+  </div>
+</section>

@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Wyniki wyborów prezydenckich 2000</title>
+  <link type="text/css" rel="stylesheet" href="{% static "css/styles.css" %}" media="all"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript" src="{% static "js/gcharts.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/jquery-3.2.0.min.js" %}"></script>
+</head>
+
+<body>
+<header>
+  {% block header %}{% endblock %}
+</header>
+<nav>
+  <div style="overflow: hidden;">
+      <div style="float: left; margin-right: 10px;"><a href="/search">Wyszukaj gminę</a></div>
+      <div>{% block nav %}{% endblock %}</div>
+      <div style="float: right;">
+      {% if user.is_anonymous %}<a href=/login/>Login</a>
+      {% else %} {{ user.first_name }}&nbsp;{{ user.last_name }} <a href="/logout/">Logout</a>
+      {% endif %}
+      </div>
+  </div>
+</nav>
+
+<div id="content">
+  {% block content %} {% endblock %}
+</div>
+
+</body>
+</html>

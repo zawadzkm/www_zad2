@@ -42,7 +42,7 @@ for i, row in df.iterrows():
         gr = df[df["Kodgminy"] == row["Kodgminy"]][["Uprawnieni", "Wydanekarty", "Oddane", "Wazne", "Niewazne"]].sum()
         c = Commune.objects.get_or_create(district=d[0], name=row["Gmina"], code=row["Kodgminy"], entitled=gr["Uprawnieni"], cards=gr["Wydanekarty"], votes=gr["Oddane"], valid=gr["Wazne"], invalid=gr["Niewazne"])
 
-    cc = Circuit.objects.create(commune=c[0], address=row["Adres"], entitled=row["Uprawnieni"], cards=row["Wydanekarty"], votes=row["Oddane"], valid=row["Wazne"], invalid=row["Niewazne"])
+    cc = Circuit.objects.create(commune=c[0], no=row["Nrobw"], address=row["Adres"], entitled=row["Uprawnieni"], cards=row["Wydanekarty"], votes=row["Oddane"], valid=row["Wazne"], invalid=row["Niewazne"])
 
     objs = [
         Vote(candidate=cands[n][0], circuit=cc, number=row[n]

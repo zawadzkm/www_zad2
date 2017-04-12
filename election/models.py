@@ -1,8 +1,11 @@
 from django.db import models
-
+from django.db.models import Sum
 
 class Candidate(models.Model):
     name = models.CharField(max_length=100)
+    firstname = models.CharField(max_length=20)
+    secondname = models.CharField(max_length=20)
+    surname = models.CharField(max_length=40)
 
 
 class Country(models.Model):
@@ -12,6 +15,14 @@ class Country(models.Model):
     votes = models.PositiveIntegerField()
     valid = models.PositiveIntegerField()
     invalid = models.PositiveIntegerField()
+
+    @property
+    def attendance(self):
+        return round(self.votes/self.entitled*100, 2)
+
+    @property
+    def candidates(self):
+        return Candidate.objects.annotate(votes=Sum("vote__number"))
 
 
 class Voivodeship(models.Model):
@@ -24,6 +35,17 @@ class Voivodeship(models.Model):
     valid = models.PositiveIntegerField()
     invalid = models.PositiveIntegerField()
 
+    @property
+    def attendance(self):
+        return round(self.votes/self.entitled*100, 2)
+
+    @property
+    def candidates(self):
+        return Candidate.objects.filter(vote__circuit__commune__district__voivodeship=self).annotate(votes=Sum("vote__number"))
+
+    def get_absolute_url(self):
+        return "/{}".format(self.id)
+
 
 class District(models.Model):
     no = models.PositiveIntegerField(unique=True)
@@ -35,6 +57,16 @@ class District(models.Model):
     valid = models.PositiveIntegerField()
     invalid = models.PositiveIntegerField()
 
+    @property
+    def attendance(self):
+        return round(self.votes/self.entitled*100, 2)
+
+    @property
+    def candidates(self):
+        return Candidate.objects.filter(vote__circuit__commune__district=self).annotate(votes=Sum("vote__number"))
+
+    def get_absolute_url(self):
+        return "/{}/{}".format(self.voivodeship.id, self.id)
 
 class Commune(models.Model):
     district = models.ForeignKey(District, on_delete=models.CASCADE, related_name='subareas')
@@ -46,8 +78,19 @@ class Commune(models.Model):
     valid = models.PositiveIntegerField()
     invalid = models.PositiveIntegerField()
 
+    @property
+    def attendance(self):
+        return round(self.votes/self.entitled*100, 2)
+
+    @property
+    def candidates(self):
+        return Candidate.objects.filter(vote__circuit__commune=self).annotate(votes=Sum("vote__number"))
+
+    def get_absolute_url(self):
+        return "/{}/{}/{}".format(self.district.voivodeship.id, self.district.id, self.id)
 
 class Circuit(models.Model):
+    no = models.PositiveIntegerField()
     commune = models.ForeignKey(Commune, on_delete=models.CASCADE, related_name='subareas')
     address = models.CharField(max_length=300)
     entitled = models.PositiveIntegerField()
@@ -56,6 +99,13 @@ class Circuit(models.Model):
     valid = models.PositiveIntegerField()
     invalid = models.PositiveIntegerField()
 
+    @property
+    def attendance(self):
+        return round(self.votes/self.entitled*100, 2)
+
+    @property
+    def candidates(self):
+        return Candidate.objects.filter(vote__circuit__id=self.id).annotate(votes=Sum("vote__number"))
 
 class Vote(models.Model):
     number = models.PositiveIntegerField()

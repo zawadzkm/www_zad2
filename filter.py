@@ -1,9 +1,9 @@
 import os, django
 from django.db.models import Sum, Min, Max, Count
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "www_lab4.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "www_zad2.settings")
 django.setup()
 
-from election.models import Candidate, District, Vote, Circuit, Voivodeship
+from election.models import Candidate, District, Vote, Circuit, Voivodeship, Country
 
 #Wypisz sumę głosów dla każdego kandydata w całym kraju (imię, nazwisko, liczba głosów)
 # cands = Candidate.objects.annotate(sum_votes=Sum("vote__number")).order_by("-sum_votes")
@@ -30,6 +30,6 @@ from election.models import Candidate, District, Vote, Circuit, Voivodeship
 # for i in cands:
 #     print("{}: {}".format(i.name, i.sum_votes))
 
-v = Voivodeship.objects.get(no=7)
-for s in v.subareas.iterator():
-    print(s.name)
+c = Candidate.objects.filter(vote__circuit__id=15).annotate(votes=Sum("vote__number")).query
+print(c)
+

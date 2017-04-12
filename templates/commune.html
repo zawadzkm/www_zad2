@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block header %}
+  <h1>Zestawienie wyników - gmina {{area.name}}</h1>
+{% endblock %}
+
+{% block nav %}
+  Wróć do: <a href="/">Polska</a> &gt; <a href="../..">{{area.district.voivodeship.name}}</a> &gt; <a href="..">{{area.district.name}}</a>
+{% endblock %}
+
+{% block content %}
+
+<section>
+    {% include "stats.html" %}
+</section>
+
+{% include "candidates.html" %}
+
+<section>
+  <h2>Wyniki głosowania w poszczególnych obwodach</h2>
+  <div id="voting_sub">
+  <table class="voting_tab">
+    <thead>
+      <tr>
+        <th>Numer obwodu</th>
+        <th>Adres</th>
+        <th>Liczba uprawnionych</th>
+        <th>Liczba kart wydanych</th>
+        <th>Liczba oddanych głosów</th>
+        <th>Głosy ważne</th>
+        <th>Głosy nieważne</th>
+        <th>Frekwencja (%)</th>
+      </tr>
+        </thead>
+        <tbody>
+        {% for row in area.subareas.all %}<tr>
+            <td>{{row.no}}</td>
+            <td>{{row.address}}</td>
+		    <td>{{row.entitled}}</td>
+		    <td>{{row.cards}}</td>
+		    <td>{{row.votes}}</td>
+		    <td>{{row.valid}}</td>
+		    <td>{{row.invalid}}</td>
+            <td>{{row.attendance}}</td>
+        </tr>{% endfor %}
+      </tbody>
+	</table>
+  </div>
+</section>
+
+<section>
+  <h2>Wyniki głosowania na poszczególnych kandydatów</h2>
+  <div id="comm_cand">
+  <table class="cand_table table-header-rotated">
+    <thead>
+      <tr>
+        <th></th>
+        <th class="rotate-45"><div><span>Dariusz Maciej GRABOWSKI</span></div></th>
+        <th class="rotate-45"><div><span>Piotr IKONOWICZ</span></div></th>
+        <th class="rotate-45"><div><span>Jarosław KALINOWSKI</span></div></th>
+        <th class="rotate-45"><div><span>Janusz KORWIN-MIKKE</span></div></th>
+        <th class="rotate-45"><div><span>Marian KRZAKLEWSKI</span></div></th>
+        <th class="rotate-45"><div><span>Aleksander KWAŚNIEWSKI</span></div></th>
+        <th class="rotate-45"><div><span>Andrzej LEPPER</span></div></th>
+        <th class="rotate-45"><div><span>Jan ŁOPUSZAŃSKI</span></div></th>
+        <th class="rotate-45"><div><span>Andrzej Marian OLECHOWSKI</span></div></th>
+        <th class="rotate-45"><div><span>Bogdan PAWŁOWSKI</span></div></th>
+        <th class="rotate-45"><div><span>Lech WAŁĘSA</span></div></th>
+        <th class="rotate-45"><div><span>Tadeusz Adam WILECKI</span></div></th>
+      </tr>
+        </thead>
+        <tbody>
+          {% for row in area.subareas.all %}<tr>
+            <td>{{row.address}}</td>
+		    {% for c in row.candidates|dictsort:"surname" %}
+                <td><a href="{{ row.id }}/{{ c.id }}/update">{{c.votes}}</a></td>
+            {% endfor %}
+        </tr>{% endfor %}
+        </tbody>
+	</table>
+  </div>
+</section>
+
+{% endblock %}

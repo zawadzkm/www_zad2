@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h3>Edycja liczby głosów w obwodzie: {{ vote.circuit.address }} na kandydata: {{ vote.candidate.name }}</h3>
+{% endblock %}
+
+{% block nav %} {% endblock %}
+
+{% block content %}
+
+  <form method="POST" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="next" value="{{ next }}">
+    <input type="submit" value="Zapisz"/>
+  </form>
+
+{% endblock %}

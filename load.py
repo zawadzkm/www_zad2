@@ -4,7 +4,7 @@ django.setup()
 
 from election.models import Voivodeship, District, Commune, Circuit, Candidate, Vote, Country
 
-df = pandas.read_csv(os.path.join(os.path.join(os.path.dirname(sys.argv[0]), "data"), "data.csv"), sep=";")
+df = pandas.read_csv(os.path.join(os.path.join(os.path.dirname(sys.argv[0]), "data"), "test_data.csv"), sep=";")
 
 # print(df.head(5).to_string())
 
@@ -17,6 +17,10 @@ for n in (CANDIDATES):
     cands[n] = cand
 
 start_time = time.time()
+
+#p=Country.objects.get(name="Polska")
+#p.delete()
+
 gr = df[["Uprawnieni", "Wydanekarty", "Oddane", "Wazne", "Niewazne"]].sum()
 
 p = Country.objects.get_or_create(name="Polska", entitled=gr["Uprawnieni"], cards=gr["Wydanekarty"], votes=gr["Oddane"], valid=gr["Wazne"], invalid=gr["Niewazne"])
@@ -51,3 +55,4 @@ for i, row in df.iterrows():
     Vote.objects.bulk_create(objs)
 
 print("load %s seconds" % round(time.time() - start_time, 2))
+

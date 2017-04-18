@@ -11,20 +11,21 @@
 </head>
 
 <body>
-<header>
-  {% block header %}{% endblock %}
-</header>
 <nav>
   <div style="overflow: hidden;">
       <div style="float: left; margin-right: 10px;"><a href="/search">Wyszukaj gminę</a></div>
       <div>{% block nav %}{% endblock %}</div>
       <div style="float: right;">
-      {% if user.is_anonymous %}<a href=/login/>Login</a>
-      {% else %} {{ user.first_name }}&nbsp;{{ user.last_name }} <a href="/logout/">Logout</a>
+      {% if user.is_anonymous %}<a href=/login/?next={{request.path|urlencode}}>Login</a>
+      {% else %} {{ user.first_name }}&nbsp;{{ user.last_name }} <a href="/logout/?next={{request.path|urlencode}}">Logout</a>
       {% endif %}
       </div>
   </div>
 </nav>
+
+<header>
+  {% block header %}{% endblock %}
+</header>
 
 <div id="content">
   {% block content %} {% endblock %}

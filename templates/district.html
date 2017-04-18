@@ -35,7 +35,7 @@
         </thead>
         <tbody>
         {% for row in area.subareas.all %}<tr>
-            <td><a href="{{row.get_absolute_url}}">{{row.id}}</a></td>
+            <td><a href="{{row.get_absolute_url}}">{{row.code}}</a></td>
             <td><a href="{{row.get_absolute_url}}">{{row.name}}</a></td>
 		    <td>{{row.entitled}}</td>
 		    <td>{{row.cards}}</td>

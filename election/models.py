@@ -44,7 +44,7 @@ class Voivodeship(models.Model):
         return Candidate.objects.filter(vote__circuit__commune__district__voivodeship=self).annotate(votes=Sum("vote__number"))
 
     def get_absolute_url(self):
-        return "/{}".format(self.id)
+        return "/{}".format(self.no)
 
 
 class District(models.Model):
@@ -66,7 +66,7 @@ class District(models.Model):
         return Candidate.objects.filter(vote__circuit__commune__district=self).annotate(votes=Sum("vote__number"))
 
     def get_absolute_url(self):
-        return "/{}/{}".format(self.voivodeship.id, self.id)
+        return "/{}/{}".format(self.voivodeship.no, self.no)
 
 class Commune(models.Model):
     district = models.ForeignKey(District, on_delete=models.CASCADE, related_name='subareas')
@@ -87,7 +87,7 @@ class Commune(models.Model):
         return Candidate.objects.filter(vote__circuit__commune=self).annotate(votes=Sum("vote__number"))
 
     def get_absolute_url(self):
-        return "/{}/{}/{}".format(self.district.voivodeship.id, self.district.id, self.id)
+        return "/{}/{}/{}".format(self.district.voivodeship.no, self.district.no, self.code)
 
 class Circuit(models.Model):
     no = models.PositiveIntegerField()

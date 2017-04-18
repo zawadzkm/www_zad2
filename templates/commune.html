@@ -73,7 +73,10 @@
           {% for row in area.subareas.all %}<tr>
             <td>{{row.address}}</td>
 		    {% for c in row.candidates|dictsort:"surname" %}
-                <td><a href="{{ row.id }}/{{ c.id }}/update">{{c.votes}}</a></td>
+                <td>
+                {% if user.is_anonymous %} {{c.votes}}
+                {% else %} <a href="{{ row.id }}/{{ c.id }}/update">{{c.votes}}</a> {% endif %}
+                </td>
             {% endfor %}
         </tr>{% endfor %}
         </tbody>
